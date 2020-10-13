@@ -756,6 +756,15 @@ test_expect_success 'partial clone using HTTP' '
 	partial_clone "$HTTPD_DOCUMENT_ROOT_PATH/server" "$HTTPD_URL/smart/server"
 '
 
+test_expect_success 'partial clone using HTTP with redirect' '
+	_NONCE=`gen_nonce` && export _NONCE &&
+	curl "$HTTPD_URL/error_ntime/${_NONCE}/3/502/10/smart/server" &&
+	curl "$HTTPD_URL/error_ntime/${_NONCE}/3/502/10/smart/server" &&
+	curl "$HTTPD_URL/error_ntime/${_NONCE}/3/502/10/smart/server" &&
+	partial_clone "$HTTPD_DOCUMENT_ROOT_PATH/server" "$HTTPD_URL/error_ntime/${_NONCE}/3/502/10/smart/server"
+'
+
+
 # DO NOT add non-httpd-specific tests here, because the last part of this
 # test script is only executed when httpd is available and enabled.
 
