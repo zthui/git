@@ -218,6 +218,20 @@ struct list_head* hook_list(const struct strbuf* hookname)
 	return hook_head;
 }
 
+int hook_exists(const char *hookname, enum hookdir_opt should_run_hookdir)
+{
+	const char *value = NULL; /* throwaway */
+	struct strbuf hook_key = STRBUF_INIT;
+
+	int could_run_hookdir = (should_run_hookdir == hookdir_interactive ||
+				should_run_hookdir == hookdir_warn ||
+				should_run_hookdir == hookdir_yes)
+				&& !!find_hook(hookname);
+
+	strbuf_addf(&hook_key, "hook.%s.command", hookname);
+
+	return (!git_config_get_value(hook_key.buf, &value)) || could_run_hookdir;
+}
 
 int run_hooks(const char *const *env, const char *hookname,
 	      const struct strvec *args, enum hookdir_opt run_hookdir)
