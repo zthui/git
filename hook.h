@@ -1,6 +1,7 @@
 #include "config.h"
 #include "list.h"
 #include "strbuf.h"
+#include "strvec.h"
 
 struct hook
 {
@@ -35,6 +36,12 @@ enum hookdir_opt
  * command line arguments.
  */
 enum hookdir_opt configured_hookdir_opt(void);
+/*
+ * Runs all hooks associated to the 'hookname' event in order. Each hook will be
+ * passed 'env' and 'args'.
+ */
+int run_hooks(const char *const *env, const char *hookname,
+	      const struct strvec *args, enum hookdir_opt run_hookdir);
 
 /* Free memory associated with a 'struct hook' */
 void free_hook(struct hook *ptr);
